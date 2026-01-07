@@ -3660,9 +3660,10 @@ function Invoke-WinUtilAssets {
               # Use full size for better visibility
               $image.Width = $Size
               $image.Height = $Size
-              # Center the image
-              $image.HorizontalAlignment = [Windows.HorizontalAlignment]::Center
-              $image.VerticalAlignment = [Windows.VerticalAlignment]::Center
+              # Position image slightly down and to the right
+              $image.HorizontalAlignment = [Windows.HorizontalAlignment]::Left
+              $image.VerticalAlignment = [Windows.VerticalAlignment]::Top
+              $image.Margin = "5,8,0,0"
               $canvas.Children.Add($image) | Out-Null
           } catch {
               # Fallback to local file if URL fails
@@ -3676,6 +3677,11 @@ function Invoke-WinUtilAssets {
                   $bitmap.EndInit()
                   $image.Source = $bitmap
                   $image.Stretch = [Windows.Media.Stretch]::Uniform
+                  $image.Width = $Size
+                  $image.Height = $Size
+                  $image.HorizontalAlignment = [Windows.HorizontalAlignment]::Left
+                  $image.VerticalAlignment = [Windows.VerticalAlignment]::Top
+                  $image.Margin = "5,8,0,0"
                   $canvas.Children.Add($image) | Out-Null
               } else {
                   # Default fallback - simple placeholder
