@@ -3580,6 +3580,8 @@ function Invoke-WinUtilAssets {
   $canvas = New-Object Windows.Controls.Canvas
   $canvas.Width = 100
   $canvas.Height = 100
+  # Make canvas background transparent
+  $canvas.Background = [Windows.Media.Brushes]::Transparent
 
   # Define a scale factor for the content inside the Canvas
   $scaleFactor = $Size / 100
@@ -3600,6 +3602,12 @@ function Invoke-WinUtilAssets {
               $bitmap.EndInit()
               $image.Source = $bitmap
               $image.Stretch = [Windows.Media.Stretch]::Uniform
+              # Make image smaller - set width and height to 50% of requested size
+              $image.Width = $Size * 0.5
+              $image.Height = $Size * 0.5
+              # Center the image
+              $image.HorizontalAlignment = [Windows.HorizontalAlignment]::Center
+              $image.VerticalAlignment = [Windows.VerticalAlignment]::Center
               $canvas.Children.Add($image) | Out-Null
           } catch {
               # Fallback to local file if URL fails
@@ -11541,36 +11549,36 @@ $sync.configs.themes = @'
     "AppInstallOverlayBackgroundColor": "#2E3135",
     "ComboBoxForegroundColor": "#F7F7F7",
     "ComboBoxBackgroundColor": "#1E3747",
-    "LabelboxForegroundColor": "#0567ff",
+    "LabelboxForegroundColor": "#00AA00",
     "MainForegroundColor": "#F7F7F7",
     "MainBackgroundColor": "#232629",
     "LabelBackgroundColor": "#232629",
-    "LinkForegroundColor": "#add8e6",
-    "LinkHoverForegroundColor": "#F7F7F7",
+    "LinkForegroundColor": "#00AA00",
+    "LinkHoverForegroundColor": "#00FF00",
     "ScrollBarBackgroundColor": "#2E3135",
-    "ScrollBarHoverColor": "#3B4252",
-    "ScrollBarDraggingColor": "#5E81AC",
-    "MicrowinBusyColor": "#2e77ff",
-    "ProgressBarForegroundColor": "#222222",
+    "ScrollBarHoverColor": "#00CC00",
+    "ScrollBarDraggingColor": "#00AA00",
+    "MicrowinBusyColor": "#00AA00",
+    "ProgressBarForegroundColor": "#00AA00",
     "ProgressBarBackgroundColor": "Transparent",
     "ProgressBarTextColor": "#232629",
-    "ButtonInstallBackgroundColor": "#222222",
-    "ButtonTweaksBackgroundColor": "#333333",
-    "ButtonConfigBackgroundColor": "#444444",
-    "ButtonUpdatesBackgroundColor": "#555555",
-    "ButtonInstallForegroundColor": "#F7F7F7",
-    "ButtonTweaksForegroundColor": "#F7F7F7",
-    "ButtonConfigForegroundColor": "#F7F7F7",
-    "ButtonUpdatesForegroundColor": "#F7F7F7",
-    "ButtonBackgroundColor": "#1E3747",
-    "ButtonBackgroundPressedColor": "#F7F7F7",
-    "ButtonBackgroundMouseoverColor": "#3B4252",
-    "ButtonBackgroundSelectedColor": "#5E81AC",
-    "ButtonForegroundColor": "#F7F7F7",
-    "ToggleButtonOnColor": "#2e77ff",
+    "ButtonInstallBackgroundColor": "#00AA00",
+    "ButtonTweaksBackgroundColor": "#00AA00",
+    "ButtonConfigBackgroundColor": "#00AA00",
+    "ButtonUpdatesBackgroundColor": "#00AA00",
+    "ButtonInstallForegroundColor": "#FFFFFF",
+    "ButtonTweaksForegroundColor": "#FFFFFF",
+    "ButtonConfigForegroundColor": "#FFFFFF",
+    "ButtonUpdatesForegroundColor": "#FFFFFF",
+    "ButtonBackgroundColor": "#00AA00",
+    "ButtonBackgroundPressedColor": "#008800",
+    "ButtonBackgroundMouseoverColor": "#00CC00",
+    "ButtonBackgroundSelectedColor": "#00FF00",
+    "ButtonForegroundColor": "#FFFFFF",
+    "ToggleButtonOnColor": "#00AA00",
     "ToggleButtonOffColor": "#707070",
     "ToolTipBackgroundColor": "#2F373D",
-    "BorderColor": "#2F373D",
+    "BorderColor": "#00AA00",
     "BorderOpacity": "0.2"
   }
 }
