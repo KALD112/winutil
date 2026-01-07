@@ -637,7 +637,7 @@ public class PowerManagement {
                 Write-Host "Reason: $($exitCode.Message)"
                 Invoke-MicrowinBusyInfo -action "warning" -message $exitCode.Message
                 Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
-                [System.Windows.MessageBox]::Show("MicroWin failed to make the ISO.", "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                [System.Windows.MessageBox]::Show("فشل MicroWin في إنشاء ISO.", "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
             } catch {
                 # Could not get error description from Windows APIs
             }
@@ -741,7 +741,7 @@ function Invoke-MicrowinGetIso {
 
     if ($sync["ISOmanual"].IsChecked) {
         # Open file dialog to let user choose the ISO file
-        Invoke-MicrowinBusyInfo -action "wip" -message "Please select an ISO file..." -interactive $true
+        Invoke-MicrowinBusyInfo -action "wip" -message "يرجى تحديد ملف ISO..." -interactive $true
         [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
         $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
         $openFileDialog.initialDirectory = $initialDirectory
@@ -757,7 +757,7 @@ function Invoke-MicrowinGetIso {
 
     } elseif ($sync["ISOdownloader"].IsChecked) {
         # Create folder browsers for user-specified locations
-        Invoke-MicrowinBusyInfo -action "wip" -message "Please select download location..." -interactive $true
+        Invoke-MicrowinBusyInfo -action "wip" -message "يرجى تحديد موقع التنزيل..." -interactive $true
         [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
         $isoDownloaderFBD = New-Object System.Windows.Forms.FolderBrowserDialog
         $isoDownloaderFBD.Description = "Please specify the path to download the ISO file to:"
@@ -2867,7 +2867,7 @@ function Hide-WPFInstallAppBusy {
         $sync.InstallAppAreaOverlay = $overlay
 
         $overlayText = New-Object Windows.Controls.TextBlock
-        $overlayText.Text = "Installing apps..."
+        $overlayText.Text = "جاري تثبيت التطبيقات..."
         $overlayText.HorizontalAlignment = 'Center'
         $overlayText.VerticalAlignment = 'Center'
         $overlayText.SetResourceReference([Windows.Controls.TextBlock]::ForegroundProperty, "MainForegroundColor")
@@ -5509,7 +5509,7 @@ function Show-WPFInstallAppBusy {
         The text to display in the busy overlay. Defaults to "Installing apps...".
     #>
     param (
-        $text = "Installing apps..."
+        $text = "جاري تثبيت التطبيقات..."
     )
     $sync.form.Dispatcher.Invoke([action]{
         $sync.InstallAppAreaOverlay.Visibility = [Windows.Visibility]::Visible
@@ -6015,8 +6015,8 @@ function Invoke-WPFFixesNetwork {
     Write-Host "Process complete. Please reboot your computer."
 
     $ButtonType = [System.Windows.MessageBoxButton]::OK
-    $MessageboxTitle = "Network Reset "
-    $Messageboxbody = ("Stock settings loaded.`n Please reboot your computer")
+    $MessageboxTitle = "إعادة تعيين الشبكة "
+    $Messageboxbody = ("تم تحميل الإعدادات الافتراضية.`n يرجى إعادة تشغيل الكمبيوتر")
     $MessageIcon = [System.Windows.MessageBoxImage]::Information
 
     [System.Windows.MessageBox]::Show($Messageboxbody, $MessageboxTitle, $ButtonType, $MessageIcon)
@@ -6228,8 +6228,8 @@ function Invoke-WPFFixesUpdate {
     Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
 
     $ButtonType = [System.Windows.MessageBoxButton]::OK
-    $MessageboxTitle = "Reset Windows Update "
-    $Messageboxbody = ("Stock settings loaded.`n Please reboot your computer")
+    $MessageboxTitle = "إعادة تعيين تحديث Windows "
+    $Messageboxbody = ("تم تحميل الإعدادات الافتراضية.`n يرجى إعادة تشغيل الكمبيوتر")
     $MessageIcon = [System.Windows.MessageBoxImage]::Information
 
     [System.Windows.MessageBox]::Show($Messageboxbody, $MessageboxTitle, $ButtonType, $MessageIcon)
@@ -6420,7 +6420,7 @@ function Invoke-WPFInstall {
     }
 
     if ($PackagesToInstall.Count -eq 0) {
-        $WarningMsg = "Please select the program(s) to install or upgrade"
+        $WarningMsg = "يرجى تحديد البرنامج (البرامج) المراد تثبيتها أو ترقيتها"
         [System.Windows.MessageBox]::Show($WarningMsg, $AppTitle, [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
@@ -6438,7 +6438,7 @@ function Invoke-WPFInstall {
         try {
             $sync.ProcessRunning = $true
             if($packagesWinget.Count -gt 0 -and $packagesWinget -ne "0") {
-                Show-WPFInstallAppBusy -text "Installing apps..."
+                Show-WPFInstallAppBusy -text "جاري تثبيت التطبيقات..."
                 Install-WinUtilWinget
                 Install-WinUtilProgramWinget -Action Install -Programs $packagesWinget
             }
@@ -6774,7 +6774,7 @@ function Invoke-WPFSelectedAppsUpdate {
     }
 
     $count = $sync.SelectedApps.Count
-    $selectedAppsButton.Content = "Selected Apps: $count"
+    $selectedAppsButton.Content = "التطبيقات المحددة: $count"
     # On every change, remove all entries inside the Popup Menu. This is done, so we can keep the alphabetical order even if elements are selected in a random way
     $sync.selectedAppsstackPanel.Children.Clear()
     $sync.SelectedApps | Foreach-Object { Add-SelectedAppsMenuItem -name $($sync.configs.applicationsHashtable.$_.Content) -key $_ }
@@ -7615,14 +7615,14 @@ function Invoke-WPFUnInstall {
     }
 
     if ($PackagesToUninstall.Count -eq 0) {
-        $WarningMsg = "Please select the program(s) to uninstall"
+        $WarningMsg = "يرجى تحديد البرنامج (البرامج) المراد إلغاء تثبيتها"
         [System.Windows.MessageBox]::Show($WarningMsg, $AppTitle, [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
     $ButtonType = [System.Windows.MessageBoxButton]::YesNo
-    $MessageboxTitle = "Are you sure?"
-    $Messageboxbody = ("This will uninstall the following applications: `n $($PackagesToUninstall | Select-Object Name, Description| Out-String)")
+    $MessageboxTitle = "هل أنت متأكد؟"
+    $Messageboxbody = ("سيتم إلغاء تثبيت التطبيقات التالية: `n $($PackagesToUninstall | Select-Object Name, Description| Out-String)")
     $MessageIcon = [System.Windows.MessageBoxImage]::Information
 
     $confirm = [System.Windows.MessageBox]::Show($Messageboxbody, $MessageboxTitle, $ButtonType, $MessageIcon)
@@ -11047,7 +11047,7 @@ $sync.configs.appnavigation = @'
     "Description": "Show installed applications"
   },
   "WPFselectedAppsButton": {
-    "Content": "Selected Apps: 0",
+    "Content": "التطبيقات المحددة: 0",
     "Category": "__Selection",
     "Type": "Button",
     "Order": "3",
@@ -15637,8 +15637,8 @@ $inputXML = @'
                             <Border Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="0" Style="{StaticResource BorderStyle}">
                                 <StackPanel Background="{DynamicResource MainBackgroundColor}" Orientation="Horizontal" HorizontalAlignment="Left">
                                     <TextBlock Padding="10">
-                                        Note: Hover over items to get a better description. Please be careful as many of these tweaks will heavily modify your system.
-                                        <LineBreak/>Recommended selections are for normal users and if you are unsure do NOT check anything else!
+                                        ملاحظة: مرر الماوس فوق العناصر للحصول على وصف أفضل. يرجى الحذر لأن العديد من هذه التحسينات ستعدل نظامك بشكل كبير.
+                                        <LineBreak/>الاختيارات الموصى بها للمستخدمين العاديين وإذا لم تكن متأكداً، لا تحدد أي شيء آخر!
                                     </TextBlock>
                                 </StackPanel>
                             </Border>
@@ -15772,11 +15772,11 @@ $inputXML = @'
                         <StackPanel Name="MicrowinISOPanel" Background="Transparent" SnapsToDevicePixels="True" Margin="1">
                             <CheckBox x:Name="WPFMicrowinDownloadFromGitHub" Content="تنزيل oscdimg.exe من مستودع CTT على GitHub" IsChecked="True" Margin="{DynamicResource MicrowinCheckBoxMargin}" />
                             <TextBlock Margin="5" Padding="1" TextWrapping="Wrap" Foreground="{DynamicResource ComboBoxForegroundColor}">
-                                Choose a Windows ISO file that you've downloaded <LineBreak/>
-                                Check the status in the console
+                                اختر ملف Windows ISO الذي قمت بتنزيله <LineBreak/>
+                                تحقق من الحالة في وحدة التحكم
                             </TextBlock>
                             <Rectangle Fill="{DynamicResource MainForegroundColor}" Height="2" HorizontalAlignment="Stretch" Margin="0,10,0,10"/>
-                            <TextBlock Margin="5" Padding="1" TextWrapping="Wrap" Foreground="{DynamicResource ComboBoxForegroundColor}" ToolTip="Scratch directories act as a custom destination for image files"><Bold>Scratch directory settings (optional)</Bold></TextBlock>
+                            <TextBlock Margin="5" Padding="1" TextWrapping="Wrap" Foreground="{DynamicResource ComboBoxForegroundColor}" ToolTip="مجلدات Scratch تعمل كوجهة مخصصة لملفات الصور"><Bold>إعدادات مجلد Scratch (اختياري)</Bold></TextBlock>
                             <CheckBox x:Name="WPFMicrowinISOScratchDir" Content="استخدام مجلد ISO كمجلد ScratchDir " IsChecked="False" Margin="{DynamicResource MicrowinCheckBoxMargin}"
                                 ToolTip="حدد هذا لاستخدام مسار ملف ISO الذي تحدده كمجلد scratch" />
                             <Grid>
@@ -15788,7 +15788,7 @@ $inputXML = @'
                                         Text="Scratch"
                                         Margin="2"
                                         IsReadOnly="False"
-                                        ToolTip="Specify an alternate path for the scratch directory"
+                                        ToolTip="حدد مساراً بديلاً لمجلد scratch"
                                         Grid.Column="0"
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource LabelboxForegroundColor}">
@@ -15898,11 +15898,11 @@ $inputXML = @'
                             />
                             <Rectangle Fill="{DynamicResource MainForegroundColor}" Height="2" HorizontalAlignment="Stretch" Margin="0,10,0,10"/>
                             <TextBlock Margin="6" Padding="1" TextWrapping="Wrap"><Bold>تحسينات (اتركه فارغاً للإعدادات الافتراضية)</Bold></TextBlock>
-                            <CheckBox Name="MicroWinWPBT" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="False" ToolTip="If enabled then allows your computer vendor to execute a program each time it boots. It enables computer vendors to force install anti-theft software, software drivers, or a software program conveniently. This could also be a security risk."><AccessText TextWrapping="Wrap" Text="Disable Windows Platform Binary Table (WPBT) (ADVANCED TWEAK)" /></CheckBox>
-                            <CheckBox Name="MicroWinUnsupported" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="False" ToolTip="If enabled then it will allow you to upgrade your PC to Windows 11 if your PC does not support Windows 11 yet. This is good for if you do not have a USB and want to upgrade to Windows 11 on unsupported hardware."><AccessText TextWrapping="Wrap" Text="Allow this PC to upgrade to Windows 11" /></CheckBox>
-                            <CheckBox Name="MicroWinESD" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="False" ToolTip="The ESD file format compresses the installation image even further, therefore reducing ISO file sizes a little more. Select this if you have a small USB."><AccessText TextWrapping="Wrap" Text="Convert this image to ESD (This will take longer)" /></CheckBox>
-                            <CheckBox Name="MicroWinNoFLA" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="True" ToolTip="The First Logon Animation is an animation that is played when a user logs on for the first time. It can artificially increase wait times. Select this option to automatically close the first logon animation and reach the desktop quicker (additional system preparation will still be done)"><AccessText TextWrapping="Wrap" Text="Skip First Logon Animation" /></CheckBox>
-                            <TextBlock Margin="6" Padding="1" TextWrapping="Wrap">WinUtil configuration file (JSON)</TextBlock>
+                            <CheckBox Name="MicroWinWPBT" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="False" ToolTip="إذا تم تفعيله، يسمح لصانع جهاز الكمبيوتر بتنفيذ برنامج في كل مرة يتم فيها التمهيد. يتيح لصانعي أجهزة الكمبيوتر تثبيت برامج مكافحة السرقة أو برامج تشغيل أو برنامج بشكل ملائم. قد يكون هذا أيضاً خطراً أمنياً."><AccessText TextWrapping="Wrap" Text="تعطيل Windows Platform Binary Table (WPBT) (تحسين متقدم)" /></CheckBox>
+                            <CheckBox Name="MicroWinUnsupported" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="False" ToolTip="إذا تم تفعيله، سيسمح لك بالترقية إلى Windows 11 إذا كان جهاز الكمبيوتر الخاص بك لا يدعم Windows 11 بعد. هذا مفيد إذا لم يكن لديك USB وتريد الترقية إلى Windows 11 على أجهزة غير مدعومة."><AccessText TextWrapping="Wrap" Text="السماح لهذا الكمبيوتر بالترقية إلى Windows 11" /></CheckBox>
+                            <CheckBox Name="MicroWinESD" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="False" ToolTip="تنسيق ملف ESD يضغط صورة التثبيت أكثر، وبالتالي يقلل حجم ملفات ISO قليلاً. حدد هذا إذا كان لديك USB صغير."><AccessText TextWrapping="Wrap" Text="تحويل هذه الصورة إلى ESD (سيستغرق هذا وقتاً أطول)" /></CheckBox>
+                            <CheckBox Name="MicroWinNoFLA" Margin="{DynamicResource MicrowinCheckBoxMargin}" IsChecked="True" ToolTip="رسوم متحركة تسجيل الدخول الأولى هي رسوم متحركة يتم تشغيلها عندما يسجل المستخدم الدخول لأول مرة. يمكن أن تزيد أوقات الانتظار بشكل مصطنع. حدد هذا الخيار لإغلاق رسوم تسجيل الدخول الأولى تلقائياً والوصول إلى سطح المكتب بشكل أسرع (سيتم إجراء إعدادات النظام الإضافية)"><AccessText TextWrapping="Wrap" Text="تخطي رسوم تسجيل الدخول الأولى" /></CheckBox>
+                            <TextBlock Margin="6" Padding="1" TextWrapping="Wrap">ملف إعدادات WinUtil (JSON)</TextBlock>
                             <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" /> <!-- Takes the remaining space -->
@@ -15913,7 +15913,7 @@ $inputXML = @'
                                         Margin="2"
                                         IsReadOnly="False"
                                         Grid.Column="0"
-                                        ToolTip="Path of your configuration file"
+                                        ToolTip="مسار ملف الإعدادات الخاص بك"
                                         VerticalAlignment="Center"
                                         Foreground="{DynamicResource LabelboxForegroundColor}">
                                 </TextBox>
@@ -15952,7 +15952,7 @@ $inputXML = @'
                                          FontSize="16"
                                          VerticalAlignment="Center"
                                          Foreground="{DynamicResource MicrowinBusyColor}"/>
-                                <TextBlock x:Name="BusyText" Text="Microwin"
+                                <TextBlock x:Name="BusyText" Text="MicroWin"
                                          VerticalAlignment="Center"
                                          TextTrimming="CharacterEllipsis"
                                          Foreground="{DynamicResource MicrowinBusyColor}"/>
@@ -15981,37 +15981,37 @@ $inputXML = @'
                                 Height = "Auto"
                                 Width = "Auto"
                                 Foreground="{DynamicResource ComboBoxForegroundColor}">
-                                <Bold>MicroWin features:</Bold><LineBreak/>
-                                - Remove Telemetry and Tracking <LineBreak/>
-                                - Fast Install using either the "User" local account or the account of your choosing <LineBreak/>
-                                - No internet requirement for install <LineBreak/>
-                                - Apps debloat <LineBreak/>
+                                <Bold>ميزات MicroWin:</Bold><LineBreak/>
+                                - إزالة التتبع والمراقبة <LineBreak/>
+                                - تثبيت سريع باستخدام حساب "المستخدم" المحلي أو الحساب الذي تختاره <LineBreak/>
+                                - لا يتطلب اتصال بالإنترنت للتثبيت <LineBreak/>
+                                - إزالة التطبيقات غير الضرورية <LineBreak/>
                                 <LineBreak/>
                                 <LineBreak/>
 
-                                <Bold>INSTRUCTIONS</Bold> <LineBreak/>
-                                - Download a Windows 11 ISO through the following options: <LineBreak/>
-                                    <TextBlock Margin="15,0,0,0" Text="- Select your own ISO: Manually download the latest Windows 11 image from " Foreground="{DynamicResource ComboBoxForegroundColor}"/>
+                                <Bold>التعليمات</Bold> <LineBreak/>
+                                - قم بتنزيل Windows 11 ISO من خلال الخيارات التالية: <LineBreak/>
+                                    <TextBlock Margin="15,0,0,0" Text="- اختر ملف ISO الخاص بك: قم بتنزيل أحدث صورة Windows 11 يدوياً من " Foreground="{DynamicResource ComboBoxForegroundColor}"/>
                                     <TextBlock Name="Win11DownloadLink" Style="{StaticResource HoverTextBlockStyle}" ToolTip="https://www.microsoft.com/software-download/windows11">Microsoft</TextBlock>. <LineBreak/>
-                                    <TextBlock Margin="15,0,0,0" Text="- Get newest ISO automatically: Choose Windows 11 Edition and preferred language." Foreground="{DynamicResource ComboBoxForegroundColor}"/> <LineBreak/>
-                                May take several minutes to process the ISO depending on your machine and connection <LineBreak/>
-                                - Put it somewhere on the C:\ drive so it is easily accessible <LineBreak/>
-                                - Launch WinUtil and MicroWin  <LineBreak/>
-                                - Click on the "Get Windows ISO" button and wait for WinUtil to process the image <LineBreak/>
-                                It will be processed and unpacked which may take some time <LineBreak/>
-                                - Once complete, choose which Windows flavor you want to base your image on <LineBreak/>
-                                - Click the "Start Process" button <LineBreak/>
-                                The process of creating the Windows image may take some time, please check the console and wait for it to say "Done" <LineBreak/>
-                                - Once complete, the target ISO file will be in the directory you have specified <LineBreak/>
-                                - Copy this image to your Ventoy USB Stick, boot to this image, gg
+                                    <TextBlock Margin="15,0,0,0" Text="- الحصول على أحدث ISO تلقائياً: اختر إصدار Windows 11 واللغة المفضلة." Foreground="{DynamicResource ComboBoxForegroundColor}"/> <LineBreak/>
+                                قد يستغرق معالجة ISO عدة دقائق حسب جهازك واتصالك <LineBreak/>
+                                - ضعه في مكان ما على محرك الأقراص C:\ حتى يكون سهل الوصول <LineBreak/>
+                                - قم بتشغيل WinUtil و MicroWin  <LineBreak/>
+                                - انقر على زر "الحصول على Windows ISO" وانتظر حتى يقوم WinUtil بمعالجة الصورة <LineBreak/>
+                                سيتم معالجتها وفك ضغطها مما قد يستغرق بعض الوقت <LineBreak/>
+                                - بعد اكتمالها، اختر إصدار Windows الذي تريد بناء صورتك عليه <LineBreak/>
+                                - انقر على زر "بدء العملية" <LineBreak/>
+                                قد تستغرق عملية إنشاء صورة Windows بعض الوقت، يرجى التحقق من وحدة التحكم والانتظار حتى تقول "تم" <LineBreak/>
+                                - بعد اكتمالها، سيكون ملف ISO الهدف في المجلد الذي حددته <LineBreak/>
+                                - انسخ هذه الصورة إلى USB Stick الخاص بـ Ventoy، قم بالتمهيد من هذه الصورة
                                 <LineBreak/>
-                                If you are injecting drivers ensure you put all your inf, sys, and dll files for each driver into a separate directory <LineBreak/><LineBreak/>
-                                <Bold>Installing VirtIO drivers</Bold><LineBreak/>
-                                If you plan on using your ISO on QEMU/Proxmox VE, you can bundle VirtIO drivers with your ISO to automatically install drivers. Simply tick the "Include VirtIO drivers" checkbox before starting the process. Then, follow these instructions:<LineBreak/><LineBreak/>
-                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="1. Proceed with Setup until you reach the disk selection screen, in which you won't see any drives" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
-                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="2. Click &quot;Load Driver&quot; and click Browse" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
-                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="3. In the folder selection dialog, point to this path: &quot;D:\VirtIO\vioscsi\w11\amd64&quot; (replace amd64 with ARM64 if you are using Windows on ARM, and &quot;D:&quot; with the drive letter of the ISO)" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
-                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="4. Select all drivers that will appear in the list box and click OK" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
+                                إذا كنت تقوم بحقن برامج التشغيل، تأكد من وضع جميع ملفات inf و sys و dll لكل برنامج تشغيل في مجلد منفصل <LineBreak/><LineBreak/>
+                                <Bold>تثبيت برامج تشغيل VirtIO</Bold><LineBreak/>
+                                إذا كنت تخطط لاستخدام ISO الخاص بك على QEMU/Proxmox VE، يمكنك تضمين برامج تشغيل VirtIO مع ISO الخاص بك لتثبيت برامج التشغيل تلقائياً. ببساطة حدد مربع "تضمين برامج تشغيل VirtIO" قبل بدء العملية. ثم اتبع هذه التعليمات:<LineBreak/><LineBreak/>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="1. تابع الإعداد حتى تصل إلى شاشة اختيار القرص، حيث لن ترى أي محركات أقراص" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="2. انقر على &quot;تحميل برنامج التشغيل&quot; وانقر على استعراض" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="3. في مربع حوار اختيار المجلد، أشر إلى هذا المسار: &quot;D:\VirtIO\vioscsi\w11\amd64&quot; (استبدل amd64 بـ ARM64 إذا كنت تستخدم Windows على ARM، واستبدل &quot;D:&quot; بحرف محرك الأقراص الخاص بـ ISO)" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Margin="15,0,0,0" Text="4. حدد جميع برامج التشغيل التي ستظهر في مربع القائمة وانقر على موافق" Foreground="{DynamicResource ComboBoxForegroundColor}"/><LineBreak/>
                             </TextBlock>
                             <TextBlock Margin="15,0,15,15"
                                 Padding = "1"
