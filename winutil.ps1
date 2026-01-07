@@ -5140,7 +5140,7 @@ function Set-WinUtilTaskbaritem {
 
     .PARAMETER overlay
         Overlay icon to display on the taskbar item, there are the presets 'None', 'logo' and 'checkmark' or you can specify a path/link to an image file.
-        CTT logo preset:
+        NWW logo preset:
         - Set-WinUtilTaskbaritem -overlay "logo"
         Checkmark preset:
         - Set-WinUtilTaskbaritem -overlay "checkmark"
@@ -8029,36 +8029,36 @@ function Invoke-WPFUpdatessecurity {
 Function Show-CTTLogo {
     <#
         .SYNOPSIS
-            Displays the CTT logo in ASCII art.
+            Displays the NWW logo in ASCII art.
         .DESCRIPTION
-            This function displays the CTT logo in ASCII art format.
+            This function displays the NWW logo in ASCII art format.
         .PARAMETER None
             No parameters are required for this function.
         .EXAMPLE
             Show-CTTLogo
-            Prints the CTT logo in ASCII art format to the console.
+            Prints the NWW logo in ASCII art format to the console.
     #>
 
     $asciiArt = @"
-    CCCCCCCCCCCCCTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
- CCC::::::::::::CT:::::::::::::::::::::TT:::::::::::::::::::::T
-CC:::::::::::::::CT:::::::::::::::::::::TT:::::::::::::::::::::T
-C:::::CCCCCCCC::::CT:::::TT:::::::TT:::::TT:::::TT:::::::TT:::::T
-C:::::C       CCCCCCTTTTTT  T:::::T  TTTTTTTTTTTT  T:::::T  TTTTTT
-C:::::C                     T:::::T                T:::::T
-C:::::C                     T:::::T                T:::::T
-C:::::C                     T:::::T                T:::::T
-C:::::C                     T:::::T                T:::::T
-C:::::C                     T:::::T                T:::::T
-C:::::C                     T:::::T                T:::::T
-C:::::C       CCCCCC        T:::::T                T:::::T
-C:::::CCCCCCCC::::C      TT:::::::TT            TT:::::::TT
-CC:::::::::::::::C       T:::::::::T            T:::::::::T
-CCC::::::::::::C         T:::::::::T            T:::::::::T
-  CCCCCCCCCCCCC          TTTTTTTTTTT            TTTTTTTTTTT
+NNNNNNNN        NNNNNNNN   WWWWWWWW                           WWWWWWWW
+N:::::::N       N::::::N   W::::::W                           W::::::W
+N::::::::N      N::::::N   W::::::W                           W::::::W
+N:::::::::N     N::::::N   W::::::W                           W::::::W
+N::::::::::N    N::::::N   W:::::W           WWWWW           W:::::W
+N:::::::::::N   N::::::N   W:::::W         W:::::W         W:::::W
+N:::::::N::::N  N::::::N   W:::::W       W:::::::W       W:::::W
+N::::::N N::::N N::::::N    W:::::W     W:::::::::W     W:::::W
+N::::::N  N::::N:::::::N     W:::::W   W:::::W:::::W   W:::::W
+N::::::N   N:::::::::::N     W:::::W W:::::W W:::::W W:::::W
+N::::::N    N::::::::::N      W:::::W:::::W   W:::::W:::::W
+N::::::N     N:::::::::N       W:::::::::W     W:::::::::W
+N::::::N      N::::::::N        W:::::::W       W:::::::W
+N::::::N       N:::::::N         W:::::W         W:::::W
+N::::::N        N::::::N          W:::W           W:::W
+NNNNNNNN         NNNNNNN           WWW             WWW
 
-====Chris Titus Tech=====
-=====Windows Toolbox=====
+=========NIT WIIT=========
+=======Windows Toolbox=======
 "@
 
     Write-Host $asciiArt
@@ -11400,7 +11400,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/timedate"
   },
   "WPFWinUtilInstallPSProfile": {
-    "Content": "تثبيت ملف CTT PowerShell",
+    "Content": "تثبيت ملف NWW PowerShell",
     "category": "Powershell Profile",
     "panel": "2",
     "Order": "a083_",
@@ -11408,7 +11408,7 @@ $sync.configs.feature = @'
     "ButtonWidth": "300"
   },
   "WPFWinUtilUninstallPSProfile": {
-    "Content": "إلغاء تثبيت ملف CTT PowerShell",
+    "Content": "إلغاء تثبيت ملف NWW PowerShell",
     "category": "Powershell Profile",
     "panel": "2",
     "Order": "a084_",
@@ -15791,7 +15791,7 @@ $inputXML = @'
                         HorizontalAlignment="Stretch">
                     <StackPanel Name="MicrowinMain" Background="{DynamicResource MainBackgroundColor}" SnapsToDevicePixels="True" Grid.Column="0" Grid.Row="0">
                         <StackPanel Name="MicrowinISOPanel" Background="Transparent" SnapsToDevicePixels="True" Margin="1">
-                            <CheckBox x:Name="WPFMicrowinDownloadFromGitHub" Content="تنزيل oscdimg.exe من مستودع CTT على GitHub" IsChecked="True" Margin="{DynamicResource MicrowinCheckBoxMargin}" />
+                            <CheckBox x:Name="WPFMicrowinDownloadFromGitHub" Content="تنزيل oscdimg.exe من مستودع NWW على GitHub" IsChecked="True" Margin="{DynamicResource MicrowinCheckBoxMargin}" />
                             <TextBlock Margin="5" Padding="1" TextWrapping="Wrap" Foreground="{DynamicResource ComboBoxForegroundColor}">
                                 اختر ملف Windows ISO الذي قمت بتنزيله <LineBreak/>
                                 تحقق من الحالة في وحدة التحكم
