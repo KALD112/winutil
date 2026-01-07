@@ -3013,7 +3013,23 @@ function Initialize-InstallCategoryAppList {
             )
 
             $toggleButton = New-Object Windows.Controls.Label
-            $toggleButton.Content = "$Category"
+            # Translate category names for Install tab
+            $categoryTranslations = @{
+                "Browsers" = "المتصفحات"
+                "Communications" = "الاتصالات"
+                "Development" = "التطوير"
+                "Document" = "المستندات"
+                "Games" = "الألعاب"
+                "Utilities" = "الأدوات المساعدة"
+                "Multimedia Tools" = "أدوات الوسائط المتعددة"
+                "Microsoft Tools" = "أدوات Microsoft"
+                "Pro Tools" = "أدوات Pro"
+            }
+            $categoryDisplay = $Category
+            if ($categoryTranslations.ContainsKey($Category)) {
+                $categoryDisplay = $categoryTranslations[$Category]
+            }
+            $toggleButton.Content = $categoryDisplay
             $toggleButton.Tag = "CategoryToggleButton"
             $toggleButton.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "HeaderFontSize")
             $toggleButton.SetResourceReference([Windows.Controls.Control]::FontFamilyProperty, "HeaderFontFamily")
@@ -3574,85 +3590,40 @@ function Invoke-WinUtilAssets {
 
   switch ($type) {
       'logo' {
-          # Check if custom logo image exists
-          $customLogoPath = "$env:LocalAppData\winutil\logo.png"
-          if (Test-Path $customLogoPath) {
-              # Use custom image if available
+          # Use custom logo from Discord URL
+          try {
               $image = New-Object Windows.Controls.Image
               $bitmap = New-Object Windows.Media.Imaging.BitmapImage
               $bitmap.BeginInit()
-              $bitmap.UriSource = New-Object System.Uri($customLogoPath)
+              $bitmap.UriSource = New-Object System.Uri("https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512")
               $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
               $bitmap.EndInit()
               $image.Source = $bitmap
               $image.Stretch = [Windows.Media.Stretch]::Uniform
               $canvas.Children.Add($image) | Out-Null
-          } else {
-              # Green chicken logo with "NIT WIIT" text
-              $canvas.Width = 200
-              $canvas.Height = 150
-              
-              # Background (black)
-              $bgRect = New-Object Windows.Shapes.Rectangle
-              $bgRect.Width = 200
-              $bgRect.Height = 150
-              $bgRect.Fill = [Windows.Media.Brushes]::Black
-              $canvas.Children.Add($bgRect) | Out-Null
-              
-              # Green chicken body (oval)
-              $chickenBody = New-Object Windows.Shapes.Ellipse
-              $chickenBody.Width = 60
-              $chickenBody.Height = 70
-              $chickenBody.Fill = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#00FF00")
-              $chickenBody.SetValue([Windows.Controls.Canvas]::LeftProperty, 70.0)
-              $chickenBody.SetValue([Windows.Controls.Canvas]::TopProperty, 20.0)
-              $canvas.Children.Add($chickenBody) | Out-Null
-              
-              # Red comb (triangle)
-              $comb = New-Object Windows.Shapes.Polygon
-              $comb.Points = New-Object Windows.Media.PointCollection
-              $comb.Points.Add([Windows.Point]::new(85, 20))
-              $comb.Points.Add([Windows.Point]::new(90, 10))
-              $comb.Points.Add([Windows.Point]::new(95, 20))
-              $comb.Fill = [Windows.Media.Brushes]::Red
-              $canvas.Children.Add($comb) | Out-Null
-              
-              # Red wattle (small circle)
-              $wattle = New-Object Windows.Shapes.Ellipse
-              $wattle.Width = 12
-              $wattle.Height = 12
-              $wattle.Fill = [Windows.Media.Brushes]::Red
-              $wattle.SetValue([Windows.Controls.Canvas]::LeftProperty, 94.0)
-              $wattle.SetValue([Windows.Controls.Canvas]::TopProperty, 50.0)
-              $canvas.Children.Add($wattle) | Out-Null
-              
-              # White sign with "HIT" text
-              $signRect = New-Object Windows.Shapes.Rectangle
-              $signRect.Width = 30
-              $signRect.Height = 20
-              $signRect.Fill = [Windows.Media.Brushes]::White
-              $signRect.SetValue([Windows.Controls.Canvas]::LeftProperty, 50.0)
-              $signRect.SetValue([Windows.Controls.Canvas]::TopProperty, 40.0)
-              $canvas.Children.Add($signRect) | Out-Null
-              
-              $hitText = New-Object Windows.Controls.TextBlock
-              $hitText.Text = "HIT"
-              $hitText.FontSize = 12
-              $hitText.FontWeight = [Windows.FontWeights]::Bold
-              $hitText.Foreground = [Windows.Media.Brushes]::Red
-              $hitText.SetValue([Windows.Controls.Canvas]::LeftProperty, 58.0)
-              $hitText.SetValue([Windows.Controls.Canvas]::TopProperty, 44.0)
-              $canvas.Children.Add($hitText) | Out-Null
-              
-              # "NIT WIIT" text below
-              $nitText = New-Object Windows.Controls.TextBlock
-              $nitText.Text = "NIT WIIT"
-              $nitText.FontSize = 20
-              $nitText.FontWeight = [Windows.FontWeights]::Bold
-              $nitText.Foreground = [Windows.Media.Brushes]::White
-              $nitText.SetValue([Windows.Controls.Canvas]::LeftProperty, 50.0)
-              $nitText.SetValue([Windows.Controls.Canvas]::TopProperty, 100.0)
-              $canvas.Children.Add($nitText) | Out-Null
+          } catch {
+              # Fallback to local file if URL fails
+              $customLogoPath = "$env:LocalAppData\winutil\logo.png"
+              if (Test-Path $customLogoPath) {
+                  $image = New-Object Windows.Controls.Image
+                  $bitmap = New-Object Windows.Media.Imaging.BitmapImage
+                  $bitmap.BeginInit()
+                  $bitmap.UriSource = New-Object System.Uri($customLogoPath)
+                  $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+                  $bitmap.EndInit()
+                  $image.Source = $bitmap
+                  $image.Stretch = [Windows.Media.Stretch]::Uniform
+                  $canvas.Children.Add($image) | Out-Null
+              } else {
+                  # Default fallback - simple placeholder
+                  $greenRect = New-Object Windows.Shapes.Rectangle
+                  $greenRect.Width = 100
+                  $greenRect.Height = 100
+                  $greenRect.Fill = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#00FF00")
+                  $greenRect.RadiusX = 10
+                  $greenRect.RadiusY = 10
+                  $canvas.Children.Add($greenRect) | Out-Null
+              }
           }
       }
       'checkmark' {
@@ -7268,7 +7239,35 @@ function Invoke-WPFUIElements {
             $count++
 
             $label = New-Object Windows.Controls.Label
-            $label.Content = $category -replace ".*__", ""
+            $categoryDisplay = $category -replace ".*__", ""
+            # Translate category names
+            $categoryTranslations = @{
+                "Actions" = "الإجراءات"
+                "Package Manager" = "مدير الحزم"
+                "Selection" = "الاختيار"
+                "Features" = "الميزات"
+                "Fixes" = "الإصلاحات"
+                "Legacy Windows Panels" = "لوحات Windows القديمة"
+                "Powershell Profile" = "ملف PowerShell"
+                "Remote Access" = "الوصول عن بُعد"
+                "Essential Tweaks" = "التحسينات الأساسية"
+                "Advanced Tweaks - CAUTION" = "التحسينات المتقدمة - تحذير"
+                "Customize Preferences" = "تخصيص التفضيلات"
+                "Performance Plans" = "خطط الأداء"
+                "Browsers" = "المتصفحات"
+                "Communications" = "الاتصالات"
+                "Development" = "التطوير"
+                "Document" = "المستندات"
+                "Games" = "الألعاب"
+                "Utilities" = "الأدوات المساعدة"
+                "Multimedia Tools" = "أدوات الوسائط المتعددة"
+                "Microsoft Tools" = "أدوات Microsoft"
+                "Pro Tools" = "أدوات Pro"
+            }
+            if ($categoryTranslations.ContainsKey($categoryDisplay)) {
+                $categoryDisplay = $categoryTranslations[$categoryDisplay]
+            }
+            $label.Content = $categoryDisplay
             $label.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "HeaderFontSize")
             $label.SetResourceReference([Windows.Controls.Control]::FontFamilyProperty, "HeaderFontFamily")
             $label.UseLayoutRounding = $true
@@ -11073,7 +11072,7 @@ $sync.configs.appnavigation = @'
     "Category": "__Selection",
     "Type": "Button",
     "Order": "3",
-    "Description": "Show the selected applications"
+    "Description": "عرض التطبيقات المحددة"
   }
 }
 '@ | ConvertFrom-Json
@@ -11337,7 +11336,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/computer"
   },
   "WPFPanelNetwork": {
-    "Content": "Network Connections",
+    "Content": "اتصالات الشبكة",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11345,7 +11344,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/network"
   },
   "WPFPanelPower": {
-    "Content": "Power Panel",
+    "Content": "لوحة الطاقة",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11353,7 +11352,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/power"
   },
   "WPFPanelPrinter": {
-    "Content": "Printer Panel",
+    "Content": "لوحة الطابعة",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11361,7 +11360,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/printer"
   },
   "WPFPanelRegion": {
-    "Content": "Region",
+    "Content": "المنطقة",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11369,7 +11368,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/region"
   },
   "WPFPanelRestore": {
-    "Content": "Windows Restore",
+    "Content": "استعادة Windows",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11377,7 +11376,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/restore"
   },
   "WPFPanelSound": {
-    "Content": "Sound Settings",
+    "Content": "إعدادات الصوت",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11385,7 +11384,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/user"
   },
   "WPFPanelSystem": {
-    "Content": "System Properties",
+    "Content": "خصائص النظام",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11393,7 +11392,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/system"
   },
   "WPFPanelTimedate": {
-    "Content": "Time and Date",
+    "Content": "الوقت والتاريخ",
     "category": "Legacy Windows Panels",
     "panel": "2",
     "Type": "Button",
@@ -11401,7 +11400,7 @@ $sync.configs.feature = @'
     "link": "https://winutil.christitus.com/dev/features/legacy-windows-panels/timedate"
   },
   "WPFWinUtilInstallPSProfile": {
-    "Content": "Install CTT PowerShell Profile",
+    "Content": "تثبيت ملف CTT PowerShell",
     "category": "Powershell Profile",
     "panel": "2",
     "Order": "a083_",
@@ -11409,7 +11408,7 @@ $sync.configs.feature = @'
     "ButtonWidth": "300"
   },
   "WPFWinUtilUninstallPSProfile": {
-    "Content": "Uninstall CTT PowerShell Profile",
+    "Content": "إلغاء تثبيت ملف CTT PowerShell",
     "category": "Powershell Profile",
     "panel": "2",
     "Order": "a084_",
@@ -11417,7 +11416,7 @@ $sync.configs.feature = @'
     "ButtonWidth": "300"
   },
   "WPFWinUtilSSHServer": {
-    "Content": "Enable OpenSSH Server",
+    "Content": "تفعيل خادم OpenSSH",
     "category": "Remote Access",
     "panel": "2",
     "Order": "a084_",
@@ -16520,10 +16519,23 @@ $winutildir = @{}
 $winutildir = "$env:LocalAppData\winutil\"
 New-Item $winutildir -ItemType Directory -Force | Out-Null
 
-if (Test-Path "$winutildir\logo.ico") {
-    $sync["logorender"] = "$winutildir\logo.ico"
-} else {
-    $sync["logorender"] = (Invoke-WinUtilAssets -Type "Logo" -Size 90 -Render)
+# Try to load logo from Discord URL first
+try {
+    $logoUri = New-Object System.Uri("https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512")
+    $bitmap = New-Object Windows.Media.Imaging.BitmapImage
+    $bitmap.BeginInit()
+    $bitmap.UriSource = $logoUri
+    $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+    $bitmap.EndInit()
+    $bitmap.Freeze()
+    $sync["logorender"] = $bitmap
+} catch {
+    # Fallback to local file or generated logo
+    if (Test-Path "$winutildir\logo.ico") {
+        $sync["logorender"] = "$winutildir\logo.ico"
+    } else {
+        $sync["logorender"] = (Invoke-WinUtilAssets -Type "Logo" -Size 90 -Render)
+    }
 }
 $sync["checkmarkrender"] = (Invoke-WinUtilAssets -Type "checkmark" -Size 512 -Render)
 $sync["warningrender"] = (Invoke-WinUtilAssets -Type "warning" -Size 512 -Render)
