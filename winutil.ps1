@@ -3602,16 +3602,60 @@ function Invoke-WinUtilAssets {
               
               # Create memory stream and bitmap
               $stream = New-Object System.IO.MemoryStream($logoBytes, $false)
-              $bitmap = New-Object Windows.Media.Imaging.BitmapImage
-              $bitmap.BeginInit()
-              $bitmap.StreamSource = $stream
-              $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
-              $bitmap.EndInit()
-              $bitmap.Freeze()
+              $originalBitmap = New-Object Windows.Media.Imaging.BitmapImage
+              $originalBitmap.BeginInit()
+              $originalBitmap.StreamSource = $stream
+              $originalBitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+              $originalBitmap.EndInit()
+              $originalBitmap.Freeze()
+              
+              # Convert to Format32bppArgb to support transparency
+              $formatConvertedBitmap = New-Object Windows.Media.Imaging.FormatConvertedBitmap
+              $formatConvertedBitmap.BeginInit()
+              $formatConvertedBitmap.Source = $originalBitmap
+              $formatConvertedBitmap.DestinationFormat = [Windows.Media.PixelFormats]::Pbgra32
+              $formatConvertedBitmap.EndInit()
+              $formatConvertedBitmap.Freeze()
+              
+              # Create WriteableBitmap to modify pixels
+              $writeableBitmap = New-Object Windows.Media.Imaging.WriteableBitmap($formatConvertedBitmap)
+              $writeableBitmap.Lock()
+              
+              # Get pixel data
+              $width = $writeableBitmap.PixelWidth
+              $height = $writeableBitmap.PixelHeight
+              $stride = $writeableBitmap.BackBufferStride
+              $bytesPerPixel = 4
+              $pixelBufferSize = $height * $stride
+              $pixels = New-Object byte[] $pixelBufferSize
+              
+              # Copy pixels to array
+              [System.Runtime.InteropServices.Marshal]::Copy($writeableBitmap.BackBuffer, $pixels, 0, $pixelBufferSize)
+              
+              # Process pixels to make black/dark pixels transparent
+              for ($i = 0; $i -lt $pixels.Length; $i += $bytesPerPixel) {
+                  $b = $pixels[$i]
+                  $g = $pixels[$i + 1]
+                  $r = $pixels[$i + 2]
+                  $a = $pixels[$i + 3]
+                  
+                  # Check if pixel is black or very dark (threshold: RGB < 40)
+                  if ($r -lt 40 -and $g -lt 40 -and $b -lt 40) {
+                      # Make it transparent
+                      $pixels[$i + 3] = 0
+                  }
+              }
+              
+              # Copy modified pixels back
+              [System.Runtime.InteropServices.Marshal]::Copy($pixels, 0, $writeableBitmap.BackBuffer, $pixelBufferSize)
+              
+              $writeableBitmap.AddDirtyRect([Windows.Int32Rect]::new(0, 0, $width, $height))
+              $writeableBitmap.Unlock()
+              $writeableBitmap.Freeze()
               
               # Create image control
               $image = New-Object Windows.Controls.Image
-              $image.Source = $bitmap
+              $image.Source = $writeableBitmap
               $image.Stretch = [Windows.Media.Stretch]::Uniform
               # Use full size for better visibility
               $image.Width = $Size
@@ -16546,13 +16590,57 @@ try {
     $logoBytes = $webClient.DownloadData("https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512")
     $webClient.Dispose()
     $stream = New-Object System.IO.MemoryStream($logoBytes, $false)
-    $bitmap = New-Object Windows.Media.Imaging.BitmapImage
-    $bitmap.BeginInit()
-    $bitmap.StreamSource = $stream
-    $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
-    $bitmap.EndInit()
-    $bitmap.Freeze()
-    $sync["logorender"] = $bitmap
+    $originalBitmap = New-Object Windows.Media.Imaging.BitmapImage
+    $originalBitmap.BeginInit()
+    $originalBitmap.StreamSource = $stream
+    $originalBitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+    $originalBitmap.EndInit()
+    $originalBitmap.Freeze()
+    
+    # Convert to Format32bppArgb to support transparency
+    $formatConvertedBitmap = New-Object Windows.Media.Imaging.FormatConvertedBitmap
+    $formatConvertedBitmap.BeginInit()
+    $formatConvertedBitmap.Source = $originalBitmap
+    $formatConvertedBitmap.DestinationFormat = [Windows.Media.PixelFormats]::Pbgra32
+    $formatConvertedBitmap.EndInit()
+    $formatConvertedBitmap.Freeze()
+    
+    # Create WriteableBitmap to modify pixels
+    $writeableBitmap = New-Object Windows.Media.Imaging.WriteableBitmap($formatConvertedBitmap)
+    $writeableBitmap.Lock()
+    
+    # Get pixel data
+    $width = $writeableBitmap.PixelWidth
+    $height = $writeableBitmap.PixelHeight
+    $stride = $writeableBitmap.BackBufferStride
+    $bytesPerPixel = 4
+    $pixelBufferSize = $height * $stride
+    $pixels = New-Object byte[] $pixelBufferSize
+    
+    # Copy pixels to array
+    [System.Runtime.InteropServices.Marshal]::Copy($writeableBitmap.BackBuffer, $pixels, 0, $pixelBufferSize)
+    
+    # Process pixels to make black/dark pixels transparent
+    for ($i = 0; $i -lt $pixels.Length; $i += $bytesPerPixel) {
+        $b = $pixels[$i]
+        $g = $pixels[$i + 1]
+        $r = $pixels[$i + 2]
+        $a = $pixels[$i + 3]
+        
+        # Check if pixel is black or very dark (threshold: RGB < 40)
+        if ($r -lt 40 -and $g -lt 40 -and $b -lt 40) {
+            # Make it transparent
+            $pixels[$i + 3] = 0
+        }
+    }
+    
+    # Copy modified pixels back
+    [System.Runtime.InteropServices.Marshal]::Copy($pixels, 0, $writeableBitmap.BackBuffer, $pixelBufferSize)
+    
+    $writeableBitmap.AddDirtyRect([Windows.Int32Rect]::new(0, 0, $width, $height))
+    $writeableBitmap.Unlock()
+    $writeableBitmap.Freeze()
+    $sync["logorender"] = $writeableBitmap
 } catch {
     # Fallback to local file or generated logo
     if (Test-Path "$winutildir\logo.ico") {
