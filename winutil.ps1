@@ -3613,9 +3613,9 @@ function Invoke-WinUtilAssets {
               $image = New-Object Windows.Controls.Image
               $image.Source = $bitmap
               $image.Stretch = [Windows.Media.Stretch]::Uniform
-              # Make image smaller - set width and height to 50% of requested size
-              $image.Width = $Size * 0.5
-              $image.Height = $Size * 0.5
+              # Use full size for better visibility
+              $image.Width = $Size
+              $image.Height = $Size
               # Center the image
               $image.HorizontalAlignment = [Windows.HorizontalAlignment]::Center
               $image.VerticalAlignment = [Windows.VerticalAlignment]::Center
@@ -16531,7 +16531,7 @@ $sync["Form"].Add_Loaded({
 })
 
 $NavLogoPanel = $sync["Form"].FindName("NavLogoPanel")
-$NavLogoPanel.Children.Add((Invoke-WinUtilAssets -Type "logo" -Size 25)) | Out-Null
+$NavLogoPanel.Children.Add((Invoke-WinUtilAssets -Type "logo" -Size 60)) | Out-Null
 
 # Initialize the hashtable
 $winutildir = @{}
