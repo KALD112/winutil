@@ -3594,12 +3594,23 @@ function Invoke-WinUtilAssets {
       'logo' {
           # Use custom logo from Discord URL
           try {
-              $image = New-Object Windows.Controls.Image
+              # Download image from URL
+              $logoUrl = "https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512"
+              $webClient = New-Object System.Net.WebClient
+              $logoBytes = $webClient.DownloadData($logoUrl)
+              $webClient.Dispose()
+              
+              # Create memory stream and bitmap
+              $stream = New-Object System.IO.MemoryStream($logoBytes, $false)
               $bitmap = New-Object Windows.Media.Imaging.BitmapImage
               $bitmap.BeginInit()
-              $bitmap.UriSource = New-Object System.Uri("https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512")
+              $bitmap.StreamSource = $stream
               $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
               $bitmap.EndInit()
+              $bitmap.Freeze()
+              
+              # Create image control
+              $image = New-Object Windows.Controls.Image
               $image.Source = $bitmap
               $image.Stretch = [Windows.Media.Stretch]::Uniform
               # Make image smaller - set width and height to 50% of requested size
@@ -16529,10 +16540,13 @@ New-Item $winutildir -ItemType Directory -Force | Out-Null
 
 # Try to load logo from Discord URL first
 try {
-    $logoUri = New-Object System.Uri("https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512")
+    $webClient = New-Object System.Net.WebClient
+    $logoBytes = $webClient.DownloadData("https://cdn.discordapp.com/icons/742280886409756722/5f9b0d0fa781152b50b93e13dbf9b25f.webp?size=512")
+    $webClient.Dispose()
+    $stream = New-Object System.IO.MemoryStream($logoBytes, $false)
     $bitmap = New-Object Windows.Media.Imaging.BitmapImage
     $bitmap.BeginInit()
-    $bitmap.UriSource = $logoUri
+    $bitmap.StreamSource = $stream
     $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
     $bitmap.EndInit()
     $bitmap.Freeze()
