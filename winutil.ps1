@@ -699,8 +699,8 @@ function Invoke-MicrowinBusyInfo {
             $sync.form.Dispatcher.BeginInvoke([action]{
                 $sync.MicrowinBusyIndicator.Visibility="Visible"
                 $sync.BusyText.Text=$message
-                $sync.BusyText.Foreground="#00FF00"
-                $sync.BusyIcon.Foreground="#00FF00"
+                $sync.BusyText.Foreground="#008800"
+                $sync.BusyIcon.Foreground="#008800"
             })
         }
         "hide" {
@@ -3638,7 +3638,7 @@ function Invoke-WinUtilAssets {
                   $greenRect = New-Object Windows.Shapes.Rectangle
                   $greenRect.Width = 100
                   $greenRect.Height = 100
-                  $greenRect.Fill = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#00FF00")
+                  $greenRect.Fill = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#008800")
                   $greenRect.RadiusX = 10
                   $greenRect.RadiusY = 10
                   $canvas.Children.Add($greenRect) | Out-Null
@@ -4955,7 +4955,7 @@ function Set-WinUtilDNS {
 
     #>
     param($DNSProvider)
-    if($DNSProvider -eq "Default") {return}
+    if($DNSProvider -eq "افتراضي" -or $DNSProvider -eq "Default") {return}
     try {
         $Adapters = Get-NetAdapter | Where-Object {$_.Status -eq "Up"}
         Write-Host "Ensuring DNS is set to $DNSProvider on the following interfaces"
@@ -7075,7 +7075,7 @@ function Invoke-WPFtweaksbutton {
 
   Set-WinUtilDNS -DNSProvider $sync["WPFchangedns"].text
 
-  if ($tweaks.count -eq 0 -and  $sync["WPFchangedns"].text -eq "Default") {
+  if ($tweaks.count -eq 0 -and  ($sync["WPFchangedns"].text -eq "افتراضي" -or $sync["WPFchangedns"].text -eq "Default")) {
     $msg = "Please check the tweaks you wish to perform."
     [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
     return
@@ -11560,36 +11560,36 @@ $sync.configs.themes = @'
     "AppInstallOverlayBackgroundColor": "#2E3135",
     "ComboBoxForegroundColor": "#F7F7F7",
     "ComboBoxBackgroundColor": "#1E3747",
-    "LabelboxForegroundColor": "#00AA00",
+    "LabelboxForegroundColor": "#006600",
     "MainForegroundColor": "#F7F7F7",
     "MainBackgroundColor": "#232629",
     "LabelBackgroundColor": "#232629",
-    "LinkForegroundColor": "#00AA00",
-    "LinkHoverForegroundColor": "#00FF00",
+    "LinkForegroundColor": "#006600",
+    "LinkHoverForegroundColor": "#008800",
     "ScrollBarBackgroundColor": "#2E3135",
-    "ScrollBarHoverColor": "#00CC00",
-    "ScrollBarDraggingColor": "#00AA00",
-    "MicrowinBusyColor": "#00AA00",
-    "ProgressBarForegroundColor": "#00AA00",
+    "ScrollBarHoverColor": "#007700",
+    "ScrollBarDraggingColor": "#006600",
+    "MicrowinBusyColor": "#006600",
+    "ProgressBarForegroundColor": "#006600",
     "ProgressBarBackgroundColor": "Transparent",
     "ProgressBarTextColor": "#232629",
-    "ButtonInstallBackgroundColor": "#00AA00",
-    "ButtonTweaksBackgroundColor": "#00AA00",
-    "ButtonConfigBackgroundColor": "#00AA00",
-    "ButtonUpdatesBackgroundColor": "#00AA00",
+    "ButtonInstallBackgroundColor": "#006600",
+    "ButtonTweaksBackgroundColor": "#006600",
+    "ButtonConfigBackgroundColor": "#006600",
+    "ButtonUpdatesBackgroundColor": "#006600",
     "ButtonInstallForegroundColor": "#FFFFFF",
     "ButtonTweaksForegroundColor": "#FFFFFF",
     "ButtonConfigForegroundColor": "#FFFFFF",
     "ButtonUpdatesForegroundColor": "#FFFFFF",
-    "ButtonBackgroundColor": "#00AA00",
-    "ButtonBackgroundPressedColor": "#008800",
-    "ButtonBackgroundMouseoverColor": "#00CC00",
-    "ButtonBackgroundSelectedColor": "#00FF00",
+    "ButtonBackgroundColor": "#006600",
+    "ButtonBackgroundPressedColor": "#005500",
+    "ButtonBackgroundMouseoverColor": "#007700",
+    "ButtonBackgroundSelectedColor": "#008800",
     "ButtonForegroundColor": "#FFFFFF",
-    "ToggleButtonOnColor": "#00AA00",
+    "ToggleButtonOnColor": "#006600",
     "ToggleButtonOffColor": "#707070",
     "ToolTipBackgroundColor": "#2F373D",
-    "BorderColor": "#00AA00",
+    "BorderColor": "#006600",
     "BorderOpacity": "0.2"
   }
 }
@@ -14390,7 +14390,7 @@ $sync.configs.tweaks = @'
     ]
   },
   "WPFOOSUbutton": {
-    "Content": "Run OO Shutup 10",
+    "Content": "تشغيل OO Shutup 10",
     "category": "z__Advanced Tweaks - CAUTION",
     "panel": "1",
     "Order": "a039_",
@@ -14403,11 +14403,11 @@ $sync.configs.tweaks = @'
     "panel": "1",
     "Order": "a040_",
     "Type": "Combobox",
-    "ComboItems": "Default DHCP Google Cloudflare Cloudflare_Malware Cloudflare_Malware_Adult Open_DNS Quad9 AdGuard_Ads_Trackers AdGuard_Ads_Trackers_Malware_Adult",
+    "ComboItems": "افتراضي DHCP Google Cloudflare Cloudflare_Malware Cloudflare_Malware_Adult Open_DNS Quad9 AdGuard_Ads_Trackers AdGuard_Ads_Trackers_Malware_Adult",
     "link": "https://winutil.christitus.com/dev/tweaks/z--advanced-tweaks---caution/changedns"
   },
   "WPFAddUltPerf": {
-    "Content": "Add and Activate Ultimate Performance Profile",
+    "Content": "إضافة وتفعيل ملف الأداء الفائق",
     "category": "Performance Plans",
     "panel": "2",
     "Order": "a080_",
@@ -14416,7 +14416,7 @@ $sync.configs.tweaks = @'
     "link": "https://winutil.christitus.com/dev/tweaks/performance-plans/addultperf"
   },
   "WPFRemoveUltPerf": {
-    "Content": "Remove Ultimate Performance Profile",
+    "Content": "إزالة ملف الأداء الفائق",
     "category": "Performance Plans",
     "panel": "2",
     "Order": "a081_",
@@ -15001,7 +15001,7 @@ $inputXML = @'
                                                 VerticalAlignment="Center"
                                                 Visibility="Collapsed">
                                             <Path x:Name="CheckMark"
-                                                  Stroke="{DynamicResource ToggleButtonOnColor}"
+                                                  Stroke="White"
                                                   StrokeThickness="1.5"
                                                   Data="M 0 5 L 5 10 L 12 0"
                                                   Stretch="Uniform"/>
@@ -15017,6 +15017,8 @@ $inputXML = @'
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="CheckMarkContainer" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="White"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <!--Setter TargetName="Border" Property="Background" Value="{DynamicResource ButtonBackgroundPressedColor}"/-->
